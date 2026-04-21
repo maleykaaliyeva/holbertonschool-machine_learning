@@ -8,18 +8,14 @@ def poly_integral(poly, C=0):
         return None
     if not isinstance(C, int):
         return None
-
     res = [C]
     for i, coeff in enumerate(poly):
         if not isinstance(coeff, (int, float)):
             return None
-        
         val = coeff / (i + 1)
         if val % 1 == 0:
             val = int(val)
         res.append(val)
-
     while len(res) > 1 and res[-1] == 0:
         res.pop()
-
     return res
