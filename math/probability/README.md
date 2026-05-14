@@ -1,0 +1,1 @@
+This project contains tasks for learning and implementing mathematical probability distributions using Python. It covers the creation and manipulation of various distributions, including Poisson, Exponential, Normal, and Binomial.
