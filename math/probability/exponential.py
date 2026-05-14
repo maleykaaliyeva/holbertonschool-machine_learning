@@ -22,6 +22,6 @@ class Exponential:
                 raise TypeError("data must be a list")
             if len(data) < 2:
                 raise ValueError("data must contain multiple values")
-            
+
             # lambtha = 1 / mean
             self.lambtha = float(1 / (sum(data) / len(data)))
