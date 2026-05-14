@@ -24,10 +24,19 @@ class Normal:
             if len(data) < 2:
                 raise ValueError("data must contain multiple values")
 
-            # Calculate mean
             self.mean = float(sum(data) / len(data))
-
-            # Calculate standard deviation
             sum_diff_sq = sum([(x - self.mean) ** 2 for x in data])
             variance = sum_diff_sq / len(data)
             self.stddev = float(variance ** 0.5)
+
+    def z_score(self, x):
+        """
+        Calculates the z-score of a given x-value
+        """
+        return (x - self.mean) / self.stddev
+
+    def x_value(self, z):
+        """
+        Calculates the x-value of a given z-score
+        """
+        return (z * self.stddev) + self.mean
