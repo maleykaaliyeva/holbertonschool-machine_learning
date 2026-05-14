@@ -26,15 +26,37 @@ class Binomial:
             if len(data) < 2:
                 raise ValueError("data must contain multiple values")
 
-            # Calculate mean and variance
             mean = sum(data) / len(data)
             sum_diff_sq = sum([(x - mean) ** 2 for x in data])
             variance = sum_diff_sq / len(data)
 
-            # Estimate p and n
             p_est = 1 - (variance / mean)
             n_est = round(mean / p_est)
 
-            # Recalculate p based on rounded n
             self.n = int(n_est)
             self.p = float(mean / n_est)
+
+    def pmf(self, k):
+        """
+        Calculates the value of the PMF for a given number of successes
+        """
+        if not isinstance(k, int):
+            k = int(k)
+        if k < 0 or k > self.n:
+            return 0
+
+        # Factorial helper logic
+        def factorial(n):
+            res = 1
+            for i in range(1, n + 1):
+                res *= i
+            return res
+
+        n = self.n
+        p = self.p
+
+        # nCr = n! / (k! * (n-k)!)
+        n_cr = factorial(n) / (factorial(k) * factorial(n - k))
+        pmf_val = n_cr * (p ** k) * ((1 - p) ** (n - k))
+
+        return pmf_val
