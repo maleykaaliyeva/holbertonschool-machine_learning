@@ -33,15 +33,26 @@ class Poisson:
         if k < 0:
             return 0
 
-        # Constants and manual calculations for e^-lambtha * lambtha^k / k!
         e = 2.7182818285
         lambtha = self.lambtha
-
-        # Factorial calculation (k!)
         factorial = 1
         for i in range(1, k + 1):
             factorial *= i
 
-        # PMF Calculation
         pmf_val = (e ** (-lambtha) * (lambtha ** k)) / factorial
         return pmf_val
+
+    def cdf(self, k):
+        """
+        Calculates the value of the CDF for a given number of successes
+        """
+        if not isinstance(k, int):
+            k = int(k)
+        if k < 0:
+            return 0
+
+        # CDF is the sum of PMF values from 0 to k
+        cdf_val = 0
+        for i in range(k + 1):
+            cdf_val += self.pmf(i)
+        return cdf_val
