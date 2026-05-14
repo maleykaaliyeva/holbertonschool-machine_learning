@@ -50,8 +50,24 @@ class Normal:
         mean = self.mean
         stddev = self.stddev
 
-        # Breakdown the formula for clarity
         exponent = -0.5 * ((x - mean) / stddev) ** 2
         coefficient = 1 / (stddev * ((2 * pi) ** 0.5))
 
         return coefficient * (e ** exponent)
+
+    def cdf(self, x):
+        """
+        Calculates the value of the CDF for a given x-value
+        """
+        pi = 3.1415926536
+        mean = self.mean
+        stddev = self.stddev
+
+        # y = (x - mean) / (stddev * sqrt(2))
+        y = (x - mean) / (stddev * (2 ** 0.5))
+
+        # erf(y) approximation
+        erf = (2 / (pi ** 0.5)) * (y - (y**3 / 3) + (y**5 / 10) -
+                                   (y**7 / 42) + (y**9 / 216))
+
+        return 0.5 * (1 + erf)
