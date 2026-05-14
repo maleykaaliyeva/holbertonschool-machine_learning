@@ -34,7 +34,7 @@ class Binomial:
             # Estimate p and n
             p_est = 1 - (variance / mean)
             n_est = round(mean / p_est)
-            
+
             # Recalculate p based on rounded n
             self.n = int(n_est)
             self.p = float(mean / n_est)
