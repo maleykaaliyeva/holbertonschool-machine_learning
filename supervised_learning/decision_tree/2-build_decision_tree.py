@@ -46,9 +46,9 @@ class Node:
         Adds prefixes to the left child string layout.
         """
         lines = text.split("\n")
-        new_text = "    +---> " + lines[0] + "\n"
+        new_text = "    +--" + lines[0] + "\n"
         for x in lines[1:]:
-            new_text += ("    |      " + x) + "\n"
+            new_text += ("    |  " + x) + "\n"
         return new_text
 
     def right_child_add_prefix(self, text):
@@ -56,9 +56,9 @@ class Node:
         Adds prefixes to the right child string layout.
         """
         lines = text.split("\n")
-        new_text = "    +---> " + lines[0] + "\n"
+        new_text = "    +--" + lines[0] + "\n"
         for x in lines[1:]:
-            new_text += ("           " + x) + "\n"
+            new_text += ("       " + x) + "\n"
         return new_text
 
     def __str__(self):
@@ -102,7 +102,7 @@ class Leaf(Node):
         """
         Returns a string representation of the leaf node.
         """
-        return f"leaf [value={self.value}]"
+        return f"-> leaf [value={self.value}]"
 
 
 class Decision_Tree():
