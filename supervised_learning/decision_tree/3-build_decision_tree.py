@@ -45,8 +45,9 @@ class Node:
         """
         Returns the list of all leaves below this node.
         """
-        return (self.left_child.get_leaves_below() +
-                self.right_child.get_leaves_below())
+        left = self.left_child.get_leaves_below()
+        right = self.right_child.get_leaves_below()
+        return left + right
 
     def left_child_add_prefix(self, text):
         """
