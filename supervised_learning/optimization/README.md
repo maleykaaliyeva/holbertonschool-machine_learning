@@ -1,0 +1,1 @@
+This project explores optimization techniques for deep learning, including data normalization, mini-batch gradient descent, momentum, RMSProp, Adam optimization, learning rate decay, and batch normalization using NumPy and TensorFlow. 
