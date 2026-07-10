@@ -1,0 +1,1 @@
+This project implements various supervised learning tasks using TensorFlow 2 and Keras, including neural network construction, model training, optimization, evaluation, prediction, and model serialization.
