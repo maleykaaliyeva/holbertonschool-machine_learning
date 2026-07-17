@@ -1,0 +1,1 @@
+This project covers the foundational mechanics of Convolutional Neural Networks, including valid, same, and strided convolutions across single and multi-channel images, as well as max and average pooling operations implemented from scratch using NumPy.
