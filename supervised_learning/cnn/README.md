@@ -1,0 +1,1 @@
+This project covers the fundamentals of Convolutional Neural Networks (CNNs) using NumPy and TensorFlow/Keras. It includes the implementation of convolutional and pooling layers, forward and backward propagation, and the LeNet-5 architecture.
