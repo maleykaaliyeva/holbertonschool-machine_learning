@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+"""Defines the Neural Style Transfer class."""
 
 import numpy as np
 import tensorflow as tf
