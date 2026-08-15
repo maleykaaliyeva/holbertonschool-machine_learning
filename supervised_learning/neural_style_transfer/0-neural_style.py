@@ -75,6 +75,6 @@ class NST:
             method='bicubic'
         )
 
-        image = image / 255.0
+        image = tf.clip_by_value(image / 255.0, 0.0, 1.0)
 
         return tf.expand_dims(image, axis=0)
