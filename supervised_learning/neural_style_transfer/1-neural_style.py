@@ -82,7 +82,7 @@ class NST:
         return tf.expand_dims(image, axis=0)
 
     def load_model(self):
-        """Load the VGG19 model and create the NST model."""
+        """Load VGG19 and create the NST model."""
         vgg = tf.keras.applications.VGG19(
             include_top=False,
             weights='imagenet'
@@ -90,16 +90,34 @@ class NST:
 
         vgg.trainable = False
 
+        def replace_pooling(layer):
+            """Replace max pooling layers with average pooling layers."""
+            if isinstance(layer, tf.keras.layers.MaxPooling2D):
+                return tf.keras.layers.AveragePooling2D(
+                    pool_size=layer.pool_size,
+                    strides=layer.strides,
+                    padding=layer.padding,
+                    name=layer.name
+                )
+            return layer
+
+        model = tf.keras.models.clone_model(
+            vgg,
+            clone_function=replace_pooling
+        )
+
+        model.set_weights(vgg.get_weights())
+        model.trainable = False
+
         outputs = [
-            vgg.get_layer(layer_name).output
+            model.get_layer(layer_name).output
             for layer_name in self.style_layers
         ]
-        outputs.append(vgg.get_layer(self.content_layer).output)
+        outputs.append(model.get_layer(self.content_layer).output)
 
         self.model = tf.keras.Model(
-            inputs=vgg.input,
+            inputs=model.input,
             outputs=outputs
         )
 
-        for layer in self.model.layers:
-            layer.trainable = False
+        self.model.trainable = False
