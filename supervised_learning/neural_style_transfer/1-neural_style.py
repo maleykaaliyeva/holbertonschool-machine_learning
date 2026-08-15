@@ -85,24 +85,32 @@ class NST:
 
         vgg.trainable = False
 
-        for layer in vgg.layers:
+        def clone_layer(layer):
+            """Clone a VGG19 layer, replacing max pooling with average pooling."""
             if isinstance(layer, tf.keras.layers.MaxPooling2D):
-                layer = tf.keras.layers.AveragePooling2D(
+                return tf.keras.layers.AveragePooling2D(
                     pool_size=layer.pool_size,
                     strides=layer.strides,
                     padding=layer.padding,
                     name=layer.name
                 )
+            return layer.__class__.from_config(layer.get_config())
 
-        outputs = [
-            vgg.get_layer(layer_name).output
-            for layer_name in self.style_layers
-        ]
-        outputs.append(vgg.get_layer(self.content_layer).output)
-
-        model = tf.keras.Model(
-            inputs=vgg.input,
-            outputs=outputs
+        model = tf.keras.models.clone_model(
+            vgg,
+            clone_function=clone_layer
         )
 
-        return model
+        model.set_weights(vgg.get_weights())
+        model.trainable = False
+
+        outputs = [
+            model.get_layer(layer_name).output
+            for layer_name in self.style_layers
+        ]
+        outputs.append(model.get_layer(self.content_layer).output)
+
+        return tf.keras.Model(
+            inputs=model.input,
+            outputs=outputs
+        )
