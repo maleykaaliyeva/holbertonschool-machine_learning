@@ -1,0 +1,1 @@
+This directory contains implementations of various Generative Adversarial Network (GAN) architectures using TensorFlow 2.15 and Keras. The project covers fundamental adversarial training concepts, progress from standard GANs to advanced Earth Mover's Distance formulations (WGAN and WGAN-GP), and concludes with deep convolutional image generation.
