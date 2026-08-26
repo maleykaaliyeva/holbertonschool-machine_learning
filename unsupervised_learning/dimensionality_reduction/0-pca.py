@@ -18,6 +18,6 @@ def pca(X, var=0.95):
     """
     _, s, Vt = np.linalg.svd(X, full_matrices=False)
     cum_var = np.cumsum(s ** 2) / np.sum(s ** 2)
-    nd = np.searchsorted(cum_var >= var, True) + 1
+    nd = np.argmax(cum_var >= var) + 1
     W = Vt[:nd].T
     return W
