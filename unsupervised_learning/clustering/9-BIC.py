@@ -10,22 +10,22 @@ def BIC(X, kmin=1, kmax=None, iterations=1000, tol=1e-5, verbose=False):
     """
     Finds best number of clusters for GMM using BIC
     """
-    if type(X) is not np.ndarray or len(X.shape) != 2:
+    if not isinstance(X, np.ndarray) or len(X.shape) != 2:
         return None, None, None, None
-    if type(kmin) is not int or kmin <= 0:
+    if not isinstance(kmin, int) or kmin <= 0:
         return None, None, None, None
 
     n, d = X.shape
 
     if kmax is None:
         kmax = n
-    if type(kmax) is not int or kmax <= 0 or kmin > kmax or kmax > n:
+    if not isinstance(kmax, int) or kmax <= 0 or kmin >= kmax or kmax > n:
         return None, None, None, None
-    if type(iterations) is not int or iterations <= 0:
+    if not isinstance(iterations, int) or iterations <= 0:
         return None, None, None, None
-    if (type(tol) is not float and type(tol) is not int) or tol < 0:
+    if (not isinstance(tol, float) and not isinstance(tol, int)) or tol < 0:
         return None, None, None, None
-    if type(verbose) is not bool:
+    if not isinstance(verbose, bool):
         return None, None, None, None
 
     log_l_list = np.zeros(kmax - kmin + 1)
@@ -49,7 +49,7 @@ def BIC(X, kmin=1, kmax=None, iterations=1000, tol=1e-5, verbose=False):
         log_l_list[idx] = log_l
         results.append((pi, m, S))
 
-        # Free parameters p = k - 1 + k*d + k*d*(d+1)/2
+        # Number of parameters p = k - 1 + k*d + k*d*(d+1)/2
         p = k - 1 + k * d + k * d * (d + 1) // 2
         b[idx] = p * np.log(n) - 2 * log_l
 
