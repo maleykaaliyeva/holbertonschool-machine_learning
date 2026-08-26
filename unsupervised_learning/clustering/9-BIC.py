@@ -23,7 +23,7 @@ def BIC(X, kmin=1, kmax=None, iterations=1000, tol=1e-5, verbose=False):
         return None, None, None, None
     if type(iterations) is not int or iterations <= 0:
         return None, None, None, None
-    if type(tol) is not float and type(tol) is not int or tol < 0:
+    if (type(tol) is not float and type(tol) is not int) or tol < 0:
         return None, None, None, None
     if type(verbose) is not bool:
         return None, None, None, None
@@ -37,6 +37,8 @@ def BIC(X, kmin=1, kmax=None, iterations=1000, tol=1e-5, verbose=False):
             res = expectation_maximization(
                 X, k, iterations, tol, verbose
             )
+            if res is None:
+                return None, None, None, None
             pi, m, S, g, log_l = res
             if pi is None or m is None or S is None or log_l is None:
                 return None, None, None, None
