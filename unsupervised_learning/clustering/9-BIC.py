@@ -1,0 +1,53 @@
+#!/usr/bin/env python3
+"""
+Bayesian Information Criterion module
+"""
+import numpy as np
+expectation_maximization = __import__('8-EM').expectation_maximization
+
+
+def BIC(X, kmin=1, kmax=None, iterations=1000, tol=1e-5, verbose=False):
+    """
+    Finds best number of clusters for GMM using BIC
+    """
+    if type(X) is not np.ndarray or len(X.shape) != 2:
+        return None, None, None, None
+    if type(kmin) is not int or kmin <= 0:
+        return None, None, None, None
+
+    n, d = X.shape
+
+    if kmax is None:
+        kmax = n
+    if type(kmax) is not int or kmax <= 0 or kmin > kmax:
+        return None, None, None, None
+    if type(iterations) is not int or iterations <= 0:
+        return None, None, None, None
+    if type(tol) is not float and type(tol) is not int or tol < 0:
+        return None, None, None, None
+    if type(verbose) is not bool:
+        return None, None, None, None
+
+    log_l_list = np.zeros(kmax - kmin + 1)
+    b = np.zeros(kmax - kmin + 1)
+    results = []
+
+    for k in range(kmin, kmax + 1):
+        pi, m, S, g, log_l = expectation_maximization(
+            X, k, iterations, tol, verbose
+        )
+        if pi is None or m is None or S is None or log_l is None:
+            return None, None, None, None
+
+        idx = k - kmin
+        log_l_list[idx] = log_l
+        results.append((pi, m, S))
+
+        p = (k * d * (d + 3) // 2) + k - 1
+        b[idx] = p * np.log(n) - 2 * log_l
+
+    best_idx = np.argmin(b)
+    best_k = kmin + best_idx
+    best_result = results[best_idx]
+
+    return best_k, best_result, log_l_list, b
