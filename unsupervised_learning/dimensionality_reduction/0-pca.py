@@ -7,17 +7,11 @@ import numpy as np
 
 def pca(X, var=0.95):
     """
-    Performs PCA on a dataset to maintain a specified fraction of variance.
-
-    Parameters:
-        X (numpy.ndarray): Data matrix of shape (n, d) with zero mean.
-        var (float): Fraction of original variance to maintain.
-
-    Returns:
-        W (numpy.ndarray): Weights matrix of shape (d, nd).
+    Performs PCA on a dataset.
     """
-    _, s, Vt = np.linalg.svd(X, full_matrices=False)
-    cum_var = np.cumsum(s ** 2) / np.sum(s ** 2)
-    nd = np.argmax(cum_var >= var) + 1
-    W = Vt[:nd].T
+    u, s, vh = np.linalg.svd(X)
+    cum_var = np.cumsum(s) / np.sum(s)
+    r = np.argwhere(cum_var >= var)[0][0]
+    W = vh[:r + 1].T
+
     return W
