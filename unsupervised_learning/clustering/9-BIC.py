@@ -19,7 +19,7 @@ def BIC(X, kmin=1, kmax=None, iterations=1000, tol=1e-5, verbose=False):
 
     if kmax is None:
         kmax = n
-    if type(kmax) is not int or kmax <= 0 or kmin > kmax:
+    if type(kmax) is not int or kmax <= 0 or kmin > kmax or kmax > n:
         return None, None, None, None
     if type(iterations) is not int or iterations <= 0:
         return None, None, None, None
@@ -33,17 +33,22 @@ def BIC(X, kmin=1, kmax=None, iterations=1000, tol=1e-5, verbose=False):
     results = []
 
     for k in range(kmin, kmax + 1):
-        pi, m, S, g, log_l = expectation_maximization(
-            X, k, iterations, tol, verbose
-        )
-        if pi is None or m is None or S is None or log_l is None:
+        try:
+            res = expectation_maximization(
+                X, k, iterations, tol, verbose
+            )
+            pi, m, S, g, log_l = res
+            if pi is None or m is None or S is None or log_l is None:
+                return None, None, None, None
+        except Exception:
             return None, None, None, None
 
         idx = k - kmin
         log_l_list[idx] = log_l
         results.append((pi, m, S))
 
-        p = (k * d * (d + 3) // 2) + k - 1
+        # Free parameters p = k - 1 + k*d + k*d*(d+1)/2
+        p = k - 1 + k * d + k * d * (d + 1) // 2
         b[idx] = p * np.log(n) - 2 * log_l
 
     best_idx = np.argmin(b)
