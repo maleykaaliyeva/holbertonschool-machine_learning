@@ -1,0 +1,1 @@
+This project explores various natural language processing word embedding techniques—including Bag of Words, TF-IDF, Word2Vec, FastText, and ELMo—using Python, NumPy, and Gensim to represent textual data numerically for machine learning models.
