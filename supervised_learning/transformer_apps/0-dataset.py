@@ -3,8 +3,17 @@
 Dataset module for Machine Translation
 """
 
-from setup import load_pt2en
 import transformers
+
+try:
+    from setup import load_pt2en
+except ImportError:
+    import tensorflow_datasets as tfds
+
+    def load_pt2en(split):
+        """Fallback dataset loader for environments missing setup.py"""
+        return tfds.load('ted_hrlr_translate/pt_to_en',
+                         split=split, as_supervised=True)
 
 
 class Dataset:
@@ -32,9 +41,9 @@ class Dataset:
         Returns:
             tokenizer_pt, tokenizer_en
         """
-        tokenizer_pt = transformers.AutoTokenizer.from_pretrained(
+        raw_pt = transformers.AutoTokenizer.from_pretrained(
             'neuralmind/bert-base-portuguese-cased')
-        tokenizer_en = transformers.AutoTokenizer.from_pretrained(
+        raw_en = transformers.AutoTokenizer.from_pretrained(
             'bert-base-uncased')
 
         def pt_iterator():
@@ -45,9 +54,9 @@ class Dataset:
             for _, en in data:
                 yield en.numpy().decode('utf-8')
 
-        tokenizer_pt = tokenizer_pt.train_new_from_iterator(
+        tokenizer_pt = raw_pt.train_new_from_iterator(
             pt_iterator(), vocab_size=2**13)
-        tokenizer_en = tokenizer_en.train_new_from_iterator(
+        tokenizer_en = raw_en.train_new_from_iterator(
             en_iterator(), vocab_size=2**13)
 
         return tokenizer_pt, tokenizer_en
