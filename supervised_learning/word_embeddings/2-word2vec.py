@@ -24,19 +24,25 @@ def word2vec_model(sentences, vector_size=100, min_count=5, window=5,
     Returns:
         the trained Word2Vec model
     """
-    # Gensim uses sg=0 for CBOW and sg=1 for Skip-gram
-    sg = 0 if cbow else 1
-
+    # Initialize model shell without sentences
     model = gensim.models.Word2Vec(
-        sentences=sentences,
         vector_size=vector_size,
         min_count=min_count,
         window=window,
         negative=negative,
-        sg=sg,
-        epochs=epochs,
+        sg=0 if cbow else 1,
         seed=seed,
         workers=workers
+    )
+
+    # Build vocabulary first
+    model.build_vocab(sentences)
+
+    # Train model explicitly over specified epochs
+    model.train(
+        sentences,
+        total_examples=model.corpus_count,
+        epochs=epochs
     )
 
     return model
