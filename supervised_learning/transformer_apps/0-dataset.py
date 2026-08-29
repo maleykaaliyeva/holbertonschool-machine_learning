@@ -3,17 +3,8 @@
 Dataset module for Machine Translation
 """
 
+from setup import load_pt2en
 import transformers
-
-try:
-    from setup import load_pt2en
-except ImportError:
-    import tensorflow_datasets as tfds
-
-    def load_pt2en(split):
-        """Fallback dataset loader for environments missing setup.py"""
-        return tfds.load('ted_hrlr_translate/pt_to_en',
-                         split=split, as_supervised=True)
 
 
 class Dataset:
