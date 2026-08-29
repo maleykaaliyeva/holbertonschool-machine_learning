@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Word2Vec model module
+Word2Vec Model Module
 """
 import gensim
 
@@ -8,8 +8,23 @@ import gensim
 def word2vec_model(sentences, vector_size=100, min_count=5, window=5,
                    negative=5, cbow=True, epochs=5, seed=0, workers=1):
     """
-    Creates, builds and trains a gensim word2vec model.
+    Creates, builds, and trains a gensim word2vec model.
+
+    Args:
+        sentences: list of sentences to be trained on
+        vector_size: dimensionality of the embedding layer
+        min_count: minimum number of occurrences for training
+        window: maximum distance between current and predicted word
+        negative: size of negative sampling
+        cbow: boolean; True for CBOW (sg=0), False for Skip-gram (sg=1)
+        epochs: number of iterations to train over
+        seed: seed for the random number generator
+        workers: number of worker threads
+
+    Returns:
+        the trained Word2Vec model
     """
+    # Gensim uses sg=0 for CBOW and sg=1 for Skip-gram
     sg = 0 if cbow else 1
 
     model = gensim.models.Word2Vec(
