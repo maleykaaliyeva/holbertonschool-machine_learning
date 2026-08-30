@@ -1,32 +1,20 @@
 #!/usr/bin/env python3
-"""
-Module to have a trained agent play an episode
-"""
+"""Play a FrozenLake episode using a trained Q-table."""
+
 import numpy as np
 
 
 def play(env, Q, max_steps=100):
-    """
-    Has the trained agent play an episode using pure exploitation
-
-    Args:
-        env: the FrozenLakeEnv instance
-        Q: numpy.ndarray containing the Q-table
-        max_steps: maximum number of steps in the episode
-
-    Returns:
-        total_rewards, rendered_outputs
-    """
-    state = env.unwrapped.s
-    rendered_outputs = [env.render()]
+    """Play one episode by always choosing the highest-valued action."""
+    state, _ = env.reset()
     total_rewards = 0
+    rendered_outputs = [env.render()]
 
     for _ in range(max_steps):
         action = np.argmax(Q[state])
         state, reward, terminated, truncated, _ = env.step(action)
-
-        rendered_outputs.append(env.render())
         total_rewards += reward
+        rendered_outputs.append(env.render())
 
         if terminated or truncated:
             break
