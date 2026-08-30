@@ -26,21 +26,28 @@ def train(env, Q, episodes=5000, max_steps=100, alpha=0.1, gamma=0.99,
         Q, total_rewards
     """
     total_rewards = []
+    initial_epsilon = epsilon
 
     for ep in range(episodes):
         state, _ = env.reset()
         episode_reward = 0
 
         for _ in range(max_steps):
+            # Select action using epsilon-greedy policy
             action = epsilon_greedy(Q, state, epsilon)
+
+            # Take the action
             next_state, reward, terminated, truncated, _ = env.step(action)
 
             # Custom requirement: If agent falls in a hole, reward is -1
-            q_reward = -1 if (terminated and reward == 0) else reward
+            # In FrozenLake, terminated=True and reward=0 implies a hole
+            if terminated and reward == 0:
+                reward = -1
 
-            # Bellman equation Q-table update
-            Q[state, action] = Q[state, action] + alpha * (
-                q_reward + gamma * np.max(Q[next_state]) - Q[state, action]
+            # Q-table update (Bellman equation)
+            best_next_action = np.max(Q[next_state])
+            Q[state, action] += alpha * (
+                reward + gamma * best_next_action - Q[state, action]
             )
 
             episode_reward += reward
@@ -51,7 +58,11 @@ def train(env, Q, episodes=5000, max_steps=100, alpha=0.1, gamma=0.99,
 
         total_rewards.append(episode_reward)
 
-        # Decay epsilon per episode
+        # Epsilon decay: epsilon = min_epsilon + (initial - min) * exp(-decay * ep)
+        # Note: The prompt implies a standard decay. A common implementation:
         epsilon = max(min_epsilon, epsilon - (epsilon_decay * epsilon))
+        # Or more simply based on typical RL tasks:
+        epsilon = min_epsilon + (initial_epsilon - min_epsilon) * \
+            np.exp(-epsilon_decay * ep)
 
     return Q, total_rewards
