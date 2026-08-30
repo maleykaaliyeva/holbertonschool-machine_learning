@@ -26,7 +26,6 @@ def train(env, Q, episodes=5000, max_steps=100, alpha=0.1, gamma=0.99,
         Q, total_rewards
     """
     total_rewards = []
-    initial_epsilon = epsilon
 
     for ep in range(episodes):
         state, _ = env.reset()
@@ -36,10 +35,10 @@ def train(env, Q, episodes=5000, max_steps=100, alpha=0.1, gamma=0.99,
             action = epsilon_greedy(Q, state, epsilon)
             next_state, reward, terminated, truncated, _ = env.step(action)
 
-            # Use -1 reward specifically for the Q-table calculation on holes
+            # Custom requirement: If agent falls in a hole, reward is -1
             q_reward = -1 if (terminated and reward == 0) else reward
 
-            # Q-table update (Bellman equation)
+            # Bellman equation Q-table update
             Q[state, action] = Q[state, action] + alpha * (
                 q_reward + gamma * np.max(Q[next_state]) - Q[state, action]
             )
@@ -53,7 +52,6 @@ def train(env, Q, episodes=5000, max_steps=100, alpha=0.1, gamma=0.99,
         total_rewards.append(episode_reward)
 
         # Decay epsilon per episode
-        epsilon = min_epsilon + (initial_epsilon - min_epsilon) * \
-            np.exp(-epsilon_decay * ep)
+        epsilon = max(min_epsilon, epsilon - (epsilon_decay * epsilon))
 
     return Q, total_rewards
