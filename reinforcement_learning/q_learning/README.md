@@ -1,0 +1,1 @@
+This project implements the Q-learning algorithm to train an agent to navigate Gymnasium's FrozenLake-v1 environment using dynamic programming and temporal difference updates. It covers environment loading, Q-table initialization, epsilon-greedy action selection, model training, and policy evaluation.
