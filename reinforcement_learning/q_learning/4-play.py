@@ -20,14 +20,11 @@ def play(env, Q, max_steps=100):
     """
     state, _ = env.reset()
     rendered_outputs = []
-    
-    # Capture initial state
-    rendered_outputs.append(env.render())
 
+    rendered_outputs.append(env.render())
     total_rewards = 0
 
     for step in range(max_steps):
-        # Always exploit Q-table
         action = np.argmax(Q[state])
         next_state, reward, terminated, truncated, _ = env.step(action)
 
