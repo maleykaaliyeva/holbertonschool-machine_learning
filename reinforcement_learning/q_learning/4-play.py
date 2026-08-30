@@ -1,28 +1,41 @@
 #!/usr/bin/env python3
 """
-Module to load the Frozen Lake environment from gymnasium
+Module to have a trained agent play an episode
 """
-import gymnasium as gym
+import numpy as np
 
 
-def load_frozen_lake(desc=None, map_name=None, is_slippery=False):
+def play(env, Q, max_steps=100):
     """
-    Loads the pre-made FrozenLakeEnv environment from gymnasium
+    Has the trained agent play an episode
 
     Args:
-        desc: is either None or a list of lists containing a custom
-            description of the map to load for the environment
-        map_name: is either None or a string containing the pre-made
-            map to load
-        is_slippery: is a boolean to determine if the ice is slippery
+        env: the FrozenLakeEnv instance
+        Q: a numpy.ndarray containing the Q-table
+        max_steps: the maximum number of steps in the episode
 
     Returns:
-        the environment
+        total_reward, rendered_outputs
     """
-    return gym.make(
-        'FrozenLake-v1',
-        desc=desc,
-        map_name=map_name,
-        is_slippery=is_slippery,
-        render_mode="ansi"
-    )
+    # Reset the environment and capture the initial board state
+    state, _ = env.reset()
+    rendered_outputs = [env.render()]
+    total_reward = 0
+
+    for _ in range(max_steps):
+        # Exploit the Q-table (Greedy policy)
+        action = np.argmax(Q[state])
+
+        # Apply the action
+        state, reward, terminated, truncated, _ = env.step(action)
+
+        # Capture the current board state as a string
+        rendered_outputs.append(env.render())
+
+        total_reward += reward
+
+        # End episode if agent reached goal, fell in hole, or timed out
+        if terminated or truncated:
+            break
+
+    return total_reward, rendered_outputs
