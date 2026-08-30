@@ -10,14 +10,14 @@ def play(env, Q, max_steps=100):
     Has the trained agent play an episode using pure exploitation
 
     Args:
-        env: FrozenLakeEnv instance
+        env: the FrozenLakeEnv instance
         Q: numpy.ndarray containing the Q-table
         max_steps: maximum number of steps in the episode
 
     Returns:
         total_rewards, rendered_outputs
     """
-    state, _ = env.reset()
+    state = env.unwrapped.s
     rendered_outputs = [env.render()]
     total_rewards = 0
 
